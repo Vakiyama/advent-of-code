@@ -5,12 +5,6 @@ import path from 'path';
 const inputDir = path.join(__dirname, "./input");
 const input = readFileSync(inputDir, { encoding: "utf8" });
 
-const contents: BagContents = {
-    red: 12,
-    green: 13,
-    blue: 14,
-}
-
 type BagContents = {
     red: number,
     green: number,
@@ -20,28 +14,27 @@ type BagContents = {
 function sumValidGameIds(input: string): number {
     let lines = input.split(EOL);
     lines = lines.filter(line => line !== ""); 
-    const sums = lines.map(getValidSum)
+    const sums = lines.map(getPowersetOfMaxValidContents)
     return sums.reduce((acc, value) => acc + value);
 }
 
-function getValidSum(line: string): number {
-    const [idString, game] = line.split(":");
-    const id = parseInt(idString.split(" ")[1]);
-    if (getContents(game)) {
-        return id;
-    }
-    return 0;
+function getPowersetOfMaxValidContents(line: string): number {
+    const [, game] = line.split(":");
+    const maxValidContents = getMaxValidContents(game);
+    return Object.values(maxValidContents).reduce((acc, currentContents) => acc * currentContents);
+           
 }
 
-function getContents(game: string): boolean {
+function getMaxValidContents(game: string): BagContents{
     const sets = game.split(";");
     const setContents = sets.map(getContentsOfSet);
-    for (const setContent of setContents) {
-        if (!isValidContents(setContent, contents)) {
-            return false;
-        }
-    }
-    return true;
+    return setContents.reduce<BagContents>((solution, currentSet) => {
+        return {
+            red: Math.max(solution.red, currentSet.red),
+            green: Math.max(solution.green, currentSet.green),
+            blue: Math.max(solution.blue, currentSet.blue),
+        };
+    }, { red: 0, green: 0, blue: 0 });
 }
 
 function getContentsOfSet(set: string): BagContents {
