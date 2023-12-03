@@ -55,7 +55,6 @@ function reduceLine(
                 sum.currentLine,
                 sum.digitAccumulator
             );
-            amountToAdd ? console.log(amountToAdd) : null;
             sum.totalSum += amountToAdd;
             sum.digitAccumulator = "";
             return sum;
