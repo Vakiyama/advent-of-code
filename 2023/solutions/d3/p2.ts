@@ -2,21 +2,7 @@ import { EOL } from 'os';
 import { join } from 'path'
 import { readFileSync } from 'fs';
 
-const input = 
-`467..114..
- ...*......
- ..35..633.
- ......#...
- 617*......
- .....+.58.
- ..592.....
- ......755.
- ...$.*....
- .664.598..`;
-
-
-// const input = readFileSync(join(__dirname, "input"), "utf8");
-
+const input = readFileSync(join(__dirname, "input"), "utf8");
 const matrix: string[][] = input.split(EOL).map(line => line.split(""));
 
 function sumEngineNumber(): number {
@@ -58,8 +44,9 @@ function multiplySurroundingPartNumbers(
     line: number
 ): number {
     const partNumbers = getSurroundingPartNumbers(index, line);
-    console.log(partNumbers, index, line);
     if (partNumbers.length === 2) {
+        const result = partNumbers[0] * partNumbers[1];
+        console.log(result, partNumbers);
         return partNumbers[0] * partNumbers[1];
     }
     return 0;
@@ -142,10 +129,7 @@ function getSurroundingNumberIndexes(
     const indexes = [];
     for (const coordinate of adjacencyCoordinates) {
         const char = getCharAtCoordinates(coordinate);
-        console.log(char);
         if (isParsableNumber(char)) {
-            console.log("pushed");
-            console.log(coordinate);
             indexes.push(coordinate);
         }
     }
